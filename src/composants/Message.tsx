@@ -13,12 +13,12 @@ type Params = {
 
 function Messsage(params: Params) {
   return (
-    <article className="cards">
+    <article className="flex flex-nowrap gap-5 bg-red-300 rounded-3xl">
       <div>
-        <img src={params?.picture ? params.picture : ""} alt="" />
+        <img src={params?.picture ? params.picture : ""} alt="" className="rounded-3xl" />
       </div>
-      <div className="info">
-        <p className="nomPrenom">
+      <div className="">
+        <p className="font-semibold text-xl md:font-bold md:text-5xl py-2">
           {params?.firstName ? <span>{params.firstName} </span> : "----"}{" "}
           {params?.lastName ? (
             <span>{params.lastName.toUpperCase()} </span>
@@ -26,14 +26,14 @@ function Messsage(params: Params) {
             "----"
           )}
         </p>
-        <p className="autre">
+        <p className="md:text-2xl">
           Sex : {params?.gender ? <span>{params.gender} </span> : "----"} {"  "};
           Age : {params?.age ? <span>{params.age} </span> : "----"} ans{" "}
         </p>
-        <p className="autre">
+        <p className="md:text-2xl">
           Phone : {params?.phone ? <span>{params.phone} </span> : "0000"}{" "}
         </p>
-        <p className="autre">
+        <p className="md:text-2xl">
           Adress : {params?.address ? <span>{params.address} </span> : "----"}{" "}
         </p>
       </div>
