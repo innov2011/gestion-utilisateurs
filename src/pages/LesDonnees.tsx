@@ -20,7 +20,7 @@ type Params = {
 function Donnees(params: Params) {
   const donnees = params.donnees;
   return (
-    <section className="grid ">
+    <section className="">
       {" "}
       {donnees.map(
         ({
