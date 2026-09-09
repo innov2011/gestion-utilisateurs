@@ -27,11 +27,11 @@ function Messsage(params: Params) {
           )}
         </p>
         <p className="autre">
-          Genre : {params?.gender ? <span>{params.gender} </span> : "----"} {"  "};
+          Sex : {params?.gender ? <span>{params.gender} </span> : "----"} {"  "};
           Age : {params?.age ? <span>{params.age} </span> : "----"} ans{" "}
         </p>
         <p className="autre">
-          phone : {params?.phone ? <span>{params.phone} </span> : "0000"}{" "}
+          Phone : {params?.phone ? <span>{params.phone} </span> : "0000"}{" "}
         </p>
         <p className="autre">
           Adress : {params?.address ? <span>{params.address} </span> : "----"}{" "}
