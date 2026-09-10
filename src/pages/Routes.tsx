@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Dashboard from "./Dashboard";
 import Donnees from "./LesUtilisateurs";
@@ -34,4 +34,4 @@ const routes = createBrowserRouter([
     ],
   },
 ]);
-export {routes};
+export { routes };

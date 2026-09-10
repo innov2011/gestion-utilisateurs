@@ -15,7 +15,7 @@ function Messsage(params: Params) {
   return (
     <article className="flex flex-nowrap gap-5 bg-red-300 rounded-3xl">
       <div>
-        <img src={params?.picture ? params.picture : ""} alt="" className="rounded-3xl" />
+        <img src={params?.picture ? params.picture : ""} alt="" className="rounded-l-3xl h-full" />
       </div>
       <div className="">
         <p className="font-semibold text-xl md:font-bold md:text-5xl py-2">

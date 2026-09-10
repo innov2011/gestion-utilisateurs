@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function DetailsUtilisateur() {
-  return (
-    <div>DetailsUtilisateur</div>
-  )
+  return <div>DetailsUtilisateur</div>;
 }
 
 export default DetailsUtilisateur;
