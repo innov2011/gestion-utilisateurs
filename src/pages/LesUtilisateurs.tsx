@@ -1,3 +1,4 @@
+import { Await } from "react-router-dom";
 import Messsage from "../composants/Message";
 
 const DONNEES = [
@@ -652,6 +653,17 @@ const DONNEES = [
       "ut voluptate irure tempor do et qui commodo adipisicing fugiat id exercitation deserunt tempor in adipisicing nulla consectetur fugiat officia",
   },
 ];
+
+/*
+fetch('https://jsonplaceholder.typicode.com/todos/1')
+      .then(response => response.json())
+      .then(json => console.log(json))
+*/
+
+const getDonnees = async () => {
+  const response = await fetch('https://jsonplaceholder.typicode.com/users');
+  const DATAS = await response.json();
+}
 
 type Message = {
   index?: string;
