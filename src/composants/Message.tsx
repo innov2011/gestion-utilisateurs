@@ -31,9 +31,10 @@ function Messsage(params: Params) {
             key={params.picture}
             src={params.picture}
             alt=""
-            loading="lazy"
+            loading="eager"
             className="absolute inset-0 h-full w-full object-cover object-top"
             onError={(event) => { event.currentTarget.style.visibility = "hidden"; }}
+            onLoad={(event) => { event.currentTarget.style.visibility = "visible"; }}
           />
         )}
       </div>
