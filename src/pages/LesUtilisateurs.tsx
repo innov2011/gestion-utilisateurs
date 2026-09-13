@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import Messsage from "../composants/Message";
 // Ancien : import { DONNEES } from "../data/utilisateurs";
 // utilisateurs.tsx fournit la fonction de chargement et le type des données.
-import { getUsers } from "../data/utilisateurs";
+// Ancien : import { getUsers } from "../data/utilisateurs";
+// Reçoit aussi la correspondance id → photo exportée par utilisateurs.tsx.
+import { getUsers, avatarsParId } from "../data/utilisateurs";
 import type { utilisateurAPI } from "../data/utilisateurs";
 
 const normaliser = (texte: string) =>
@@ -212,9 +214,12 @@ function Donnees() {
               Message.tsx utilise index dans le lien /me/users/:id vers DetailsUtilisateur.tsx. */}
           {utilisateurs.map((utilisateur) => (
             <li key={utilisateur.id} className="min-w-0">
+              {/* Ajout : LesUtilisateurs.tsx transmet le chemin local à Message.tsx via picture.
+                  L'id garantit la même photo après une recherche ou un tri. */}
               <Messsage
                 index={String(utilisateur.id)}
                 firstName={utilisateur.name}
+                picture={avatarsParId[utilisateur.id]}
                 email={utilisateur.email}
                 phone={utilisateur.phone}
                 address={`${utilisateur.address.street}, ${utilisateur.address.suite}, ${utilisateur.address.zipcode} ${utilisateur.address.city}`}

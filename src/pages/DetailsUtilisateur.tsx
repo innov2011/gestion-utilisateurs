@@ -1,7 +1,9 @@
 ﻿import { Link, useParams } from "react-router-dom";
 // Ancien : import { DONNEES } from "../data/utilisateurs";
 // utilisateurs.tsx fournit les données API ; les hooks gèrent leur chargement.
-import { getUsers } from "../data/utilisateurs";
+// Ancien : import { getUsers } from "../data/utilisateurs";
+// Reçoit la même correspondance id → photo que LesUtilisateurs.tsx depuis utilisateurs.tsx.
+import { getUsers, avatarsParId } from "../data/utilisateurs";
 import type { utilisateurAPI } from "../data/utilisateurs";
 import { useEffect, useState } from "react";
 
@@ -86,10 +88,23 @@ function DetailsUtilisateur() {
                   {/* Les initiales proviennent désormais du nom complet de l'API. */}
                   {fullName.trim().split(/\s+/).slice(0, 2).map((mot) => mot.charAt(0)).join("")}
                 </span>
-                {/* Aucune photo n'est fournie : les initiales restent visibles. Ancien code :
+                {/* Ancien affichage basé sur user.picture, absent des données API :
                 <img key={user.picture} src={user.picture} alt={fullName} className="relative h-full w-full object-cover"
                   onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />
                 */}
+                {/* utilisateurs.tsx → avatarsParId[user.id] → image du profil.
+                    Sans photo, ou si son chargement échoue, les initiales restent visibles. */}
+                {avatarsParId[user.id] && (
+                  <img
+                    key={avatarsParId[user.id]}
+                    src={avatarsParId[user.id]}
+                    alt={fullName}
+                    className="relative h-full w-full object-cover"
+                    onError={(event) => {
+                      event.currentTarget.style.visibility = "hidden";
+                    }}
+                  />
+                )}
               </div>
               <a href={`mailto:${user.email}`} className={`${focus} inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700`}>
                 Envoyer un email <span aria-hidden="true" className="ml-3">↗</span>

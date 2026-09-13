@@ -653,6 +653,23 @@ export const DONNEES = [
 // L'ancien tableau reste disponible, mais son affichage dans la console est désactivé.
 // console.log(DONNEES);
 
+// Associe chaque id API à une photo locale choisie pour illustrer le profil.
+// public/avatars est accessible via /avatars/ dans le navigateur.
+// utilisateurs.tsx exporte cette correspondance vers LesUtilisateurs.tsx et DetailsUtilisateur.tsx.
+// Partial permet de recevoir undefined si un id n'a pas de photo : les initiales restent visibles.
+export const avatarsParId: Partial<Record<number, string>> = {
+  1: "/avatars/townsend-barrett.jpg",
+  2: "/avatars/santos-aguilar.jpg",
+  3: "/avatars/terra-strong.jpg",
+  4: "/avatars/tasha-joyce.jpg",
+  5: "/avatars/tucker-rodgers.jpg",
+  6: "/avatars/yates-walters.jpg",
+  7: "/avatars/darla-todd.jpg",
+  8: "/avatars/karina-mcdaniel.jpg",
+  9: "/avatars/cooke-duke.jpg",
+  10: "/avatars/robles-cervantes.jpg",
+};
+
 export type utilisateurAPI = {
   id: number;
   name: string;
