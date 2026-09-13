@@ -1,10 +1,48 @@
 ﻿import { Link, useParams } from "react-router-dom";
-import { DONNEES } from "../data/utilisateurs";
+// Ancien : import { DONNEES } from "../data/utilisateurs";
+// utilisateurs.tsx fournit les données API ; les hooks gèrent leur chargement.
+import { getUsers } from "../data/utilisateurs";
+import type { utilisateurAPI } from "../data/utilisateurs";
+import { useEffect, useState } from "react";
 
 function DetailsUtilisateur() {
+  // Message.tsx crée le lien /me/users/:id ; Routes.tsx déclare cette route.
+  // useParams récupère cet id sous forme de texte dans DetailsUtilisateur.tsx.
   const { id } = useParams();
-  const user = DONNEES.find((utilisateur) => utilisateur.index === id);
+  // Conserve la liste reçue de getUsers et l'état de la requête.
+  const [users, setUsers] = useState<utilisateurAPI[]>([]);
+  const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState("");
+
+  // Charge aussi les données à l'ouverture directe du lien ou après un rafraîchissement.
+  useEffect(() => {
+    // Empêche une réponse tardive de modifier une page déjà quittée.
+    let actif = true;
+    getUsers()
+      .then((resultat) => {
+        if (actif) setUsers(resultat);
+      })
+      .catch(() => {
+        if (actif) setErreur("Impossible de charger les utilisateurs.");
+      })
+      .finally(() => {
+        if (actif) setChargement(false);
+      });
+
+    // Désactive la réception du résultat lorsque React nettoie cet effet.
+    return () => {
+      actif = false;
+    };
+  }, []);
+
+  // Ancien : const user = DONNEES.find((utilisateur) => utilisateur.index === id);
+  // Compare l'id numérique reçu de getUsers à l'id texte transmis dans l'URL.
+  const user = users.find((utilisateur) => String(utilisateur.id) === id);
   const focus = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600";
+
+  // Attend la réponse avant de conclure que le profil est introuvable.
+  if (chargement) return <p role="status" className="p-6">Chargement du profil…</p>;
+  if (erreur) return <p role="alert" className="p-6">{erreur}</p>;
 
   if (!user) {
     return (
@@ -21,8 +59,13 @@ function DetailsUtilisateur() {
     );
   }
 
-  const fullName = `${user.firstName} ${user.lastName}`;
-  const gender = user.gender === "male" ? "Homme" : user.gender === "female" ? "Femme" : user.gender;
+  // Ancien : const fullName = `${user.firstName} ${user.lastName}`;
+  // Le champ name reçu de utilisateurs.tsx contient déjà le nom complet.
+  const fullName = user.name;
+  // Le genre n'est pas fourni par le type API : ancien calcul désactivé.
+  // const gender = user.gender === "male" ? "Homme" : user.gender === "female" ? "Femme" : user.gender;
+  // Transforme l'objet address en texte réutilisable dans le profil.
+  const adresse = `${user.address.street}, ${user.address.suite}, ${user.address.zipcode} ${user.address.city}`;
 
   return (
     <section className="min-h-screen bg-slate-50 px-4 py-8 text-slate-900 sm:px-6 sm:py-12">
@@ -39,10 +82,14 @@ function DetailsUtilisateur() {
             <div className="relative -mt-20 flex flex-col items-start gap-5 sm:-mt-24 sm:flex-row sm:items-end sm:justify-between">
               <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-3xl border-4 border-white bg-blue-100 shadow-md sm:h-48 sm:w-48">
                 <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-5xl font-bold text-blue-700">
-                  {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                  {/* Ancien : {user.firstName.charAt(0)}{user.lastName.charAt(0)} */}
+                  {/* Les initiales proviennent désormais du nom complet de l'API. */}
+                  {fullName.trim().split(/\s+/).slice(0, 2).map((mot) => mot.charAt(0)).join("")}
                 </span>
+                {/* Aucune photo n'est fournie : les initiales restent visibles. Ancien code :
                 <img key={user.picture} src={user.picture} alt={fullName} className="relative h-full w-full object-cover"
                   onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />
+                */}
               </div>
               <a href={`mailto:${user.email}`} className={`${focus} inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700`}>
                 Envoyer un email <span aria-hidden="true" className="ml-3">↗</span>
@@ -51,11 +98,15 @@ function DetailsUtilisateur() {
             <header className="mt-6">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Profil utilisateur</p>
               <h1 className="mt-2 break-words text-3xl font-bold tracking-tight sm:text-4xl">{fullName}</h1>
-              <p className="mt-2 text-slate-500">{user.address}</p>
+              {/* Ancien : <p className="mt-2 text-slate-500">{user.address}</p> */}
+              {/* Affiche l'adresse convertie en texte ci-dessus. */}
+              <p className="mt-2 text-slate-500">{adresse}</p>
+              {/* Âge et genre absents du type API : ancien affichage désactivé.
               <div className="mt-4 flex flex-wrap gap-2 text-sm font-medium">
                 <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">{user.age} ans</span>
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">{gender}</span>
               </div>
+              */}
             </header>
             <div className="mt-8 grid gap-8 border-t border-slate-100 pt-8 md:grid-cols-2 md:gap-12">
               <section aria-labelledby="contact-title">
@@ -71,13 +122,17 @@ function DetailsUtilisateur() {
                   </div>
                   <div>
                     <dt className="text-sm text-slate-500">Adresse</dt>
-                    <dd className="mt-1 font-medium">{user.address}</dd>
+                    {/* Ancien : <dd className="mt-1 font-medium">{user.address}</dd> */}
+                    {/* Réutilise la même adresse texte dans les coordonnées. */}
+                    <dd className="mt-1 font-medium">{adresse}</dd>
                   </div>
                 </dl>
               </section>
               <section aria-labelledby="about-title" className="rounded-2xl bg-slate-50 p-6">
                 <h2 id="about-title" className="text-lg font-semibold">À propos</h2>
-                <p className="mt-4 break-words leading-7 text-slate-600">{user.about || "Cet utilisateur n’a pas encore ajouté de présentation."}</p>
+                {/* Ancien : <p className="mt-4 break-words leading-7 text-slate-600">{user.about || "Cet utilisateur n’a pas encore ajouté de présentation."}</p> */}
+                {/* Le type API ne fournit pas de présentation : affiche un texte explicite. */}
+                <p className="mt-4 break-words leading-7 text-slate-600">Aucune présentation disponible.</p>
               </section>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 export const DONNEES = [
   {
     index: "6a86698be963b5d7e952ac95",
@@ -651,4 +650,45 @@ export const DONNEES = [
       "ut voluptate irure tempor do et qui commodo adipisicing fugiat id exercitation deserunt tempor in adipisicing nulla consectetur fugiat officia",
   },
 ];
-console.log(DONNEES);
+// L'ancien tableau reste disponible, mais son affichage dans la console est désactivé.
+// console.log(DONNEES);
+
+export type utilisateurAPI = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: {
+    street: string;
+    suite: string;
+    city: string;
+    zipcode: string;
+  };
+};
+
+/*
+fetch('https://jsonplaceholder.typicode.com/todos/1')
+      .then(response => response.json())
+      .then(json => console.log(json))
+*/
+
+// Ancien code : les données étaient récupérées sans être retournées.
+// export const getUsers = async () => {
+//   const response = await fetch("https://jsonplaceholder.typicode.com/users");
+//   const userJson = await response.json();
+// };
+
+// Source : API → getUsers → LesUtilisateurs.tsx et DetailsUtilisateur.tsx.
+// Promise<utilisateurAPI[]> décrit le tableau reçu après le chargement.
+export const getUsers = async (): Promise<utilisateurAPI[]> => {
+  // Lance la requête vers la liste des utilisateurs.
+  const response = await fetch("https://jsonplaceholder.typicode.com/users");
+
+  // Une erreur HTTP sera interceptée par les pages pour afficher un message.
+  if (!response.ok) {
+    throw new Error("Impossible de charger les utilisateurs");
+  }
+
+  // Retourne les données JSON aux composants qui appellent getUsers().
+  return response.json();
+};
